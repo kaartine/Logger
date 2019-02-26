@@ -22,34 +22,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#pragma once
-
-#include <string>
+#include "imp_logger.h"
 
 namespace Logs {
-    
-enum LogMode {
-    CONSOLE,
-    FILE
-};
 
-enum LogVerboseLevel {
-    ERROR,
-    WARNING,
-    VERBOSE
-};
+int ImpFileLogger::setFileName(char *fileName) {
 
-class ILogger {
-public:
-        virtual void log(const std::string &formatString, LogVerboseLevel level) = 0;
-        virtual void logError(const std::string &formatString) {
-            log(formatString, ERROR);
-        };
-};
-
-class LoggerFactory {
-public:
-    static ILogger *getLogger(LogMode mode, char *fileName = nullptr);
-};
+    return 0;
+}
 
 }

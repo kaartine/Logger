@@ -22,34 +22,43 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#pragma once
+#include "imp_logger.h"
 
-#include <string>
+#include <cstdarg>
+#include <stdarg.h>
+#include <iostream>
+#include <vector>
 
 namespace Logs {
-    
-enum LogMode {
-    CONSOLE,
-    FILE
-};
 
-enum LogVerboseLevel {
-    ERROR,
-    WARNING,
-    VERBOSE
-};
+void ImpStdLogger::log(const std::string &formatString, LogVerboseLevel level) {
+    const char * const tmpFormatString = formatString.c_str();
+    va_list vaArgs;
+    va_start(vaArgs, level);
+    va_list vaCopy;
+    va_copy(vaCopy, vaArgs);
+    const int inputLen = vsnprintf(nullptr, 0, tmpFormatString, vaCopy);
+    va_end(vaCopy);
+    std::vector<char> charVector((size_t)inputLen + 1);
+    vsnprintf(charVector.data(), charVector.size(), tmpFormatString, vaArgs);
+    va_end(vaArgs);
+    std::string stream = std::string(charVector.data(), charVector.size());
+    /*
+    switch (type) {
+    case ipu_shared::IPU_LOG_TYPE_ERR:
+        errorLog("IpuShared Error: " + stream);
+        break;
+    case ipu_shared::IPU_LOG_TYPE_WARN:
+        warningLog("IpuShared Warning: " + stream);
+        break;
+      */
 
-class ILogger {
-public:
-        virtual void log(const std::string &formatString, LogVerboseLevel level) = 0;
-        virtual void logError(const std::string &formatString) {
-            log(formatString, ERROR);
-        };
-};
+    if (level == ERROR)
+        std::cerr << "Error: " << stream;
+    else if (level == WARNING)
+        std::cout << "Warning: " << stream;
 
-class LoggerFactory {
-public:
-    static ILogger *getLogger(LogMode mode, char *fileName = nullptr);
-};
+}
+
 
 }

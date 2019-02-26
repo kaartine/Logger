@@ -27,8 +27,52 @@ SOFTWARE.
 #include <logger.h>
 
 using Logs::ILogger;
+using Logs::LoggerFactory;
+
+int countWords(std::stringstream &ss) {
+    std::string word;
+    int count = 0;
+    while (ss >> word) {
+        count++;
+    }
+    return count;
+}
+
+TEST (LoggerFactory, getLogger) {
+    ILogger *logger = LoggerFactory::getLogger(Logs::CONSOLE);
+    ASSERT_TRUE(logger);
+}
 
 TEST (Logger, init) {
+    // Redirect streams
+    std::streambuf* oldCoutStreamBuf = std::cout.rdbuf();
+    std::streambuf* oldCerrStreamBuf = std::cerr.rdbuf();
+    std::stringstream strCout;
+    std::stringstream strCerr;
+    std::cout.rdbuf(strCout.rdbuf());
+    std::cerr.rdbuf(strCerr.rdbuf());
 
-    ILogger logger;
+    ILogger *logger = LoggerFactory::getLogger(Logs::CONSOLE);
+    logger->log("Hello World!", Logs::ERROR);
+    logger->log("Hello World!", Logs::WARNING);
+    
+    // Restore old streams
+    std::cout.rdbuf(oldCoutStreamBuf);
+    std::cerr.rdbuf(oldCerrStreamBuf);
+    
+    int count = countWords(strCout);
+    EXPECT_GT(count, 0);
+    count = countWords(strCerr);
+    EXPECT_GT(count, 0);
+}
+
+
+TEST (Logger, custom_param) {
+    ILogger *logger = LoggerFactory::getLogger(Logs::CONSOLE);
+}
+
+TEST (FileLogger, init_missining_file_name) {
+    ILogger *logger = LoggerFactory::getLogger(Logs::FILE);
+    logger->log("Hello World!", Logs::ERROR);
+
 }

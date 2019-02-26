@@ -22,34 +22,26 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#pragma once
+#include "imp_logger.h"
 
-#include <string>
+#include <mutex>
 
 namespace Logs {
-    
-enum LogMode {
-    CONSOLE,
-    FILE
-};
 
-enum LogVerboseLevel {
-    ERROR,
-    WARNING,
-    VERBOSE
-};
+std::mutex sLoggerMutex;
+ImpStdLogger sStdLogger;
+ImpFileLogger sFileLogger;
 
-class ILogger {
-public:
-        virtual void log(const std::string &formatString, LogVerboseLevel level) = 0;
-        virtual void logError(const std::string &formatString) {
-            log(formatString, ERROR);
-        };
-};
-
-class LoggerFactory {
-public:
-    static ILogger *getLogger(LogMode mode, char *fileName = nullptr);
-};
-
+ILogger *LoggerFactory::getLogger(LogMode mode, char *fileName) {
+    if (mode == CONSOLE) {
+        return &sStdLogger;
+    } else if (mode == FILE) {
+        sFileLogger.setFileName(fileName);
+        return &sFileLogger;
+    } else {
+        // just for sanity
+        return &sStdLogger;
+    }
 }
+
+} // namespace

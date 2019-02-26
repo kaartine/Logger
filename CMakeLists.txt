@@ -59,17 +59,24 @@ if (CMAKE_VERSION VERSION_LESS 2.8.11)
 endif()
 
 set(logger_files
-    src/logger.cpp
+    src/std_logger.cpp
+    src/file_logger.cpp
+    src/imp_logger.cpp
+    src/logger_factory.cpp
     )
 
+# Build Logger library
 add_library(logger_lib ${logger_files})
-target_include_directories(logger_lib INTERFACE include)
+target_include_directories(logger_lib PRIVATE src)
+# Public API for the Logger
+target_include_directories(logger_lib PUBLIC include)
 
 set(logger_test_files 
     tests/main.cpp
     tests/tests.cpp
     )
 
+# Test app for the Logger
 add_executable(logger_test ${logger_test_files})
 
 target_link_libraries(logger_test gtest_main gtest logger_lib)
