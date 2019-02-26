@@ -22,24 +22,41 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+#pragma once
+
 #include "logger.h"
+
+#include <cstdarg>
+#include <stdarg.h>
+#include <iostream>
+#include <vector>
+#include <fstream>
 
 namespace Logs {
 
 class ImpLogger : public ILogger {
 public:
-    virtual void log(const std::string &formatString, LogVerboseLevel level) = 0;
+    static void getString(std::string &text, const std::string &formatString, LogVerboseLevel level, va_list vaArgs);
+    void printToStream(std::ostream &stream, std::string &text, LogVerboseLevel level);
 };
 
 class ImpStdLogger : public ImpLogger {
 public:
-    virtual void log(const std::string &formatString, LogVerboseLevel level);
+    virtual void log(const std::string &formatString, LogVerboseLevel level, ...);
+    virtual std::ostream &log(LogVerboseLevel level);
 };
 
 class ImpFileLogger : public ImpLogger {
 public:
-    virtual void log(const std::string &formatString, LogVerboseLevel level);
+    virtual ~ImpFileLogger();
+
+    virtual void log(const std::string &formatString, LogVerboseLevel level, ...);
+    virtual std::ostream &log(LogVerboseLevel level);
     int setFileName(char *fileName);
+
+private:
+    std::string mFileName;
+    std::ofstream mLogfile;
 };
 
 

@@ -27,8 +27,31 @@ SOFTWARE.
 namespace Logs {
 
 int ImpFileLogger::setFileName(char *fileName) {
+    if (!fileName)
+        return Logs::error_parameters;
+
+    mLogfile.close();
+    mLogfile.open(fileName, std::ios::out | std::ios::app);
 
     return 0;
+}
+
+ImpFileLogger::~ImpFileLogger() {
+    mLogfile.close();
+}
+
+void ImpFileLogger::log(const std::string &formatString, LogVerboseLevel level, ...) {
+    std::string text;
+    va_list args;
+    va_start(args, level);
+    getString(text, formatString, level, args);
+    va_end(args);
+
+    printToStream(mLogfile, text, level);
+}
+
+std::ostream &ImpFileLogger::log(LogVerboseLevel level) {
+    return mLogfile;
 }
 
 }

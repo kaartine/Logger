@@ -27,7 +27,7 @@ SOFTWARE.
 #include <string>
 
 namespace Logs {
-    
+
 enum LogMode {
     CONSOLE,
     FILE
@@ -39,12 +39,18 @@ enum LogVerboseLevel {
     VERBOSE
 };
 
+const int error_parameters = -1;
+
+class IStringer {
+public:
+    virtual std::string toString() const = 0;
+};
+
 class ILogger {
 public:
-        virtual void log(const std::string &formatString, LogVerboseLevel level) = 0;
-        virtual void logError(const std::string &formatString) {
-            log(formatString, ERROR);
-        };
+    virtual void log(const std::string &formatString, LogVerboseLevel level, ...) = 0;
+
+    virtual std::ostream &log(LogVerboseLevel level) = 0;
 };
 
 class LoggerFactory {

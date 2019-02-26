@@ -36,7 +36,9 @@ ILogger *LoggerFactory::getLogger(LogMode mode, char *fileName) {
     if (mode == CONSOLE) {
         return &sStdLogger;
     } else if (mode == FILE) {
-        sFileLogger.setFileName(fileName);
+        int ret = sFileLogger.setFileName(fileName);
+        if (ret != 0)
+            sStdLogger.log("Failed to set fileName. It might be null or path is invalid.", ERROR);
         return &sFileLogger;
     } else {
         // just for sanity

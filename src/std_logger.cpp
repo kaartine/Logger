@@ -24,41 +24,32 @@ SOFTWARE.
 
 #include "imp_logger.h"
 
-#include <cstdarg>
-#include <stdarg.h>
 #include <iostream>
-#include <vector>
 
 namespace Logs {
 
-void ImpStdLogger::log(const std::string &formatString, LogVerboseLevel level) {
-    const char * const tmpFormatString = formatString.c_str();
-    va_list vaArgs;
-    va_start(vaArgs, level);
-    va_list vaCopy;
-    va_copy(vaCopy, vaArgs);
-    const int inputLen = vsnprintf(nullptr, 0, tmpFormatString, vaCopy);
-    va_end(vaCopy);
-    std::vector<char> charVector((size_t)inputLen + 1);
-    vsnprintf(charVector.data(), charVector.size(), tmpFormatString, vaArgs);
-    va_end(vaArgs);
-    std::string stream = std::string(charVector.data(), charVector.size());
-    /*
-    switch (type) {
-    case ipu_shared::IPU_LOG_TYPE_ERR:
-        errorLog("IpuShared Error: " + stream);
-        break;
-    case ipu_shared::IPU_LOG_TYPE_WARN:
-        warningLog("IpuShared Warning: " + stream);
-        break;
-      */
+void ImpStdLogger::log(const std::string &formatString, LogVerboseLevel level, ...) {
+
+    std::string text;
+    va_list args;
+    va_start(args, level);
+    getString(text, formatString, level, args);
+    va_end(args);
 
     if (level == ERROR)
-        std::cerr << "Error: " << stream;
+        printToStream(std::cerr, text, level);
     else if (level == WARNING)
-        std::cout << "Warning: " << stream;
+        printToStream(std::cout, text, level);
+    else
+        printToStream(std::cout, text, level);
 
 }
 
+std::ostream &ImpStdLogger::log(LogVerboseLevel level) {
+    if (level == ERROR)
+        return std::cerr << "Error: ";
+    else if (level == WARNING)
+        return std::cout << "Warning: ";
+}
 
 }
