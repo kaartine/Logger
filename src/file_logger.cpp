@@ -26,7 +26,7 @@ SOFTWARE.
 
 namespace Logs {
 
-int ImpFileLogger::setFileName(char *fileName) {
+int ImpFileLogger::setFileName(const char *fileName) {
     if (!fileName)
         return Logs::error_parameters;
 
@@ -41,6 +41,8 @@ ImpFileLogger::~ImpFileLogger() {
 }
 
 void ImpFileLogger::log(const std::string &formatString, LogVerboseLevel level, ...) {
+    std::lock_guard<std::mutex> lock(mLoggerMutex);
+
     std::string text;
     va_list args;
     va_start(args, level);
@@ -51,6 +53,8 @@ void ImpFileLogger::log(const std::string &formatString, LogVerboseLevel level, 
 }
 
 std::ostream &ImpFileLogger::log(LogVerboseLevel level) {
+    std::lock_guard<std::mutex> lock(mLoggerMutex);
+
     if (level == ERROR)
         return mLogfile << "Error: ";
     else if (level == WARNING)

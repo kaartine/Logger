@@ -55,7 +55,7 @@ public:
 
 class LoggerFactory {
 public:
-    static ILogger *getLogger(LogMode mode, char *fileName = nullptr);
+    static ILogger *getLogger(LogMode mode, const char *fileName = nullptr);
 };
 
 }

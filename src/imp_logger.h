@@ -31,6 +31,7 @@ SOFTWARE.
 #include <iostream>
 #include <vector>
 #include <fstream>
+#include <mutex>
 
 namespace Logs {
 
@@ -38,6 +39,9 @@ class ImpLogger : public ILogger {
 public:
     static void getString(std::string &text, const std::string &formatString, va_list vaArgs);
     void printToStream(std::ostream &stream, std::string &text, LogVerboseLevel level);
+
+protected:
+    std::mutex mLoggerMutex;
 };
 
 class ImpStdLogger : public ImpLogger {
@@ -52,7 +56,7 @@ public:
 
     virtual void log(const std::string &formatString, LogVerboseLevel level, ...);
     virtual std::ostream &log(LogVerboseLevel level);
-    int setFileName(char *fileName);
+    int setFileName(const char *fileName);
 
 private:
     std::string mFileName;

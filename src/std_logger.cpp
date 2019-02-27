@@ -29,6 +29,7 @@ SOFTWARE.
 namespace Logs {
 
 void ImpStdLogger::log(const std::string &formatString, LogVerboseLevel level, ...) {
+    std::lock_guard<std::mutex> lock(mLoggerMutex);
 
     std::string text;
     va_list args;
@@ -46,6 +47,8 @@ void ImpStdLogger::log(const std::string &formatString, LogVerboseLevel level, .
 }
 
 std::ostream &ImpStdLogger::log(LogVerboseLevel level) {
+    std::lock_guard<std::mutex> lock(mLoggerMutex);
+
     if (level == ERROR)
         return std::cerr << "Error: ";
     else if (level == WARNING)

@@ -24,15 +24,12 @@ SOFTWARE.
 
 #include "imp_logger.h"
 
-#include <mutex>
-
 namespace Logs {
 
-std::mutex sLoggerMutex;
 ImpStdLogger sStdLogger;
 ImpFileLogger sFileLogger;
 
-ILogger *LoggerFactory::getLogger(LogMode mode, char *fileName) {
+ILogger *LoggerFactory::getLogger(LogMode mode, const char *fileName) {
     if (mode == CONSOLE) {
         return &sStdLogger;
     } else if (mode == FILE) {
