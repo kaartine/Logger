@@ -35,5 +35,13 @@ int main(int /*argc*/, char ** /*argv*/) {
     log->log("Another way to use logger.", Logs::WARNING);
     log->log("And some format strings. %s%d%s.", Logs::WARNING, "<", 42, ">");
 
+    SLOGE("Here is example using MACRO: %d", 42);
+
+    const char* debugFile = "./logs.txt";
+    SLOGW("Next traces go at the end of file called %s", debugFile);
+
+    FLOGE("This trace goes to a file.", debugFile);
+    FLOGW("This as well.", debugFile);
+
     return 0;
 }

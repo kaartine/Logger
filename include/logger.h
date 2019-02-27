@@ -26,6 +26,13 @@ SOFTWARE.
 
 #include <string>
 
+#define SLOGE(string, ...) Logs::LoggerFactory::getLogger(Logs::CONSOLE)->log(string, Logs::ERROR, ##__VA_ARGS__)
+#define SLOGW(string, ...) Logs::LoggerFactory::getLogger(Logs::CONSOLE)->log(string, Logs::WARNING, ##__VA_ARGS__)
+
+#define FLOGE(string, filename, ...) Logs::LoggerFactory::getLogger(Logs::FILE, filename)->log(string, Logs::ERROR, ##__VA_ARGS__)
+#define FLOGW(string, filename, ...) Logs::LoggerFactory::getLogger(Logs::FILE, filename)->log(string, Logs::WARNING, ##__VA_ARGS__)
+
+
 namespace Logs {
 
 enum LogMode {
