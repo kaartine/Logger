@@ -33,20 +33,13 @@ SOFTWARE.
 using Logs::ILogger;
 using Logs::LoggerFactory;
 
-struct MyType : public Logs::IStringer {
+struct MyType {
     int mNumber;
     int mOtherNumber;
 
-    std::string toString() const {
-        std::stringstream text;
-        text << "My number: " << mNumber << std::endl;
-        text << "My other number: " << mOtherNumber << std::endl;
-        return text.str();
-    }
-
-    friend std::ostream& operator<<(std::ostream& os, const MyType& me)
-    {
-        os << me.toString();
+    friend std::ostream& operator<<(std::ostream& os, const MyType& me) {
+        os << "My number: " << me.mNumber << std::endl;
+        os << "My other number: " << me.mOtherNumber << std::endl;
         return os;
     }
 };
@@ -116,14 +109,13 @@ TEST (StdLogger, custom_param) {
 
     ILogger *logger = LoggerFactory::getLogger(Logs::CONSOLE);
     logger->log("Hello World! %d", Logs::ERROR, 56);
-    logger->log("Hello World! %s", Logs::ERROR, myType.toString().c_str());
     logger->log(Logs::ERROR) << myType;
 
     // Restore old streams
     std::cerr.rdbuf(oldCerrStreamBuf);
 
     int count = countWords(strCerr);
-    EXPECT_EQ(count, 23);
+    EXPECT_EQ(count, 12);
 }
 
 TEST (FileLogger, missining_file_name) {

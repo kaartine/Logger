@@ -28,7 +28,6 @@ SOFTWARE.
 using Logs::ILogger;
 
 int main(int /*argc*/, char ** /*argv*/) {
-
     ILogger *log = Logs::LoggerFactory::getLogger(Logs::CONSOLE);
 
     log->log(Logs::ERROR) << "Hello from test app" << std::endl;

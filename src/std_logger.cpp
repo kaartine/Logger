@@ -43,7 +43,6 @@ void ImpStdLogger::log(const std::string &formatString, LogVerboseLevel level, .
         printToStream(std::cout, text, level);
     else
         printToStream(std::cout, text, level);
-
 }
 
 std::ostream &ImpStdLogger::log(LogVerboseLevel level) {
@@ -57,4 +56,4 @@ std::ostream &ImpStdLogger::log(LogVerboseLevel level) {
         return std::cout << "Unknown level: ";
 }
 
-}
+} // namespace

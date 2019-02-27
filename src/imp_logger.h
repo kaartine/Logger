@@ -27,14 +27,19 @@ SOFTWARE.
 #include "logger.h"
 
 #include <cstdarg>
-#include <stdarg.h>
-#include <iostream>
-#include <vector>
 #include <fstream>
+#include <iostream>
 #include <mutex>
+#include <stdarg.h>
+#include <vector>
 
 namespace Logs {
 
+const int error_parameters = -1;
+
+/**
+ * ImpLogger is common class for actual implementations.
+ */
 class ImpLogger : public ILogger {
 public:
     static void getString(std::string &text, const std::string &formatString, va_list vaArgs);
@@ -44,24 +49,38 @@ protected:
     std::mutex mLoggerMutex;
 };
 
+/**
+ * ImpStdLogger is implementation for the Logs::CONSOLE output
+ *
+ * Inherits ImpLogger -class
+ */
 class ImpStdLogger : public ImpLogger {
 public:
     virtual void log(const std::string &formatString, LogVerboseLevel level, ...);
     virtual std::ostream &log(LogVerboseLevel level);
 };
 
+/**
+ * ImpFileLogger is implementation for the Logs::FILE output
+ *
+ * Inherits ImpLogger -class
+ */
 class ImpFileLogger : public ImpLogger {
 public:
     virtual ~ImpFileLogger();
 
     virtual void log(const std::string &formatString, LogVerboseLevel level, ...);
     virtual std::ostream &log(LogVerboseLevel level);
+
+    /**
+     * setFileName set output file name.
+     * @param[in] fileName  File name
+     */
     int setFileName(const char *fileName);
 
-private:
+protected:
     std::string mFileName;
     std::ofstream mLogfile;
 };
 
-
-}
+} // namespace

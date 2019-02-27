@@ -26,10 +26,12 @@ SOFTWARE.
 
 namespace Logs {
 
+// Singleton instances for differnet loggers
+// No need to add mutex into getLogger whith static instances
 ImpStdLogger sStdLogger;
 ImpFileLogger sFileLogger;
 
-ILogger *LoggerFactory::getLogger(LogMode mode, const char *fileName) {
+ILogger *LoggerFactory::getLogger(LogOutput mode, const char *fileName) {
     if (mode == CONSOLE) {
         return &sStdLogger;
     } else if (mode == FILE) {

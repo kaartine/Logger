@@ -61,7 +61,6 @@ std::ostream &ImpFileLogger::log(LogVerboseLevel level) {
         return mLogfile << "Warning: ";
     else
         return mLogfile << "Unknown level: ";
-
 }
 
-}
+} // namespace

@@ -26,43 +26,74 @@ SOFTWARE.
 
 #include <string>
 
+/**
+ * Helper macros to make logging easy.
+*/
 #define SLOGE(string, ...) Logs::LoggerFactory::getLogger(Logs::CONSOLE)->log(string, Logs::ERROR, ##__VA_ARGS__)
 #define SLOGW(string, ...) Logs::LoggerFactory::getLogger(Logs::CONSOLE)->log(string, Logs::WARNING, ##__VA_ARGS__)
 
 #define FLOGE(string, filename, ...) Logs::LoggerFactory::getLogger(Logs::FILE, filename)->log(string, Logs::ERROR, ##__VA_ARGS__)
 #define FLOGW(string, filename, ...) Logs::LoggerFactory::getLogger(Logs::FILE, filename)->log(string, Logs::WARNING, ##__VA_ARGS__)
 
-
 namespace Logs {
 
-enum LogMode {
-    CONSOLE,
-    FILE
+/**
+ *Logger output
+*/
+enum LogOutput {
+    CONSOLE,    // Output to console
+    FILE        // Output to file
 };
 
+/**
+ *Verbose level
+*/
 enum LogVerboseLevel {
-    ERROR,
-    WARNING,
-    VERBOSE
+    ERROR,      // Only error traces
+    WARNING     // Warning and error traces
 };
 
-const int error_parameters = -1;
-
-class IStringer {
-public:
-    virtual std::string toString() const = 0;
-};
-
+/**
+ILogger class
+Is abstarct class. Implementation is created by the LoggerFactory
+*/
 class ILogger {
 public:
+    /**
+     * log -function
+     * C API style tracing
+     *
+     * @param[in] formatString      Format string
+     * @param[in] level             Verbose level
+     * @param[in] ...               Format string parameters
+    */
     virtual void log(const std::string &formatString, LogVerboseLevel level, ...) = 0;
 
+    /**
+     * overloaded log -function
+     * C++ streaming API style
+     *
+     * @param[in] level     Verbose level
+     *
+     * @return std::ostream
+    */
     virtual std::ostream &log(LogVerboseLevel level) = 0;
 };
 
+/**
+ *
+ * LoggerFactory
+ * Creates instance of ILogger. (Uses singleton design pattern)
+*/
 class LoggerFactory {
 public:
-    static ILogger *getLogger(LogMode mode, const char *fileName = nullptr);
+    /**
+     * getLogger
+     *
+     * @param[in] target    The output target
+     * @param[in] fileName  Mandatory for Logs::FILE -target
+     */
+    static ILogger *getLogger(LogOutput target, const char *fileName = nullptr);
 };
 
 }

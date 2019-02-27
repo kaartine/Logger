@@ -46,4 +46,4 @@ void ImpLogger::printToStream(std::ostream &stream, std::string &text, LogVerbos
         stream << "Unknown level: " << text << std::endl;
 }
 
-}
+} // namespace
