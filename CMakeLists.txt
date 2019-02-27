@@ -23,6 +23,7 @@
 cmake_minimum_required(VERSION 2.8.2)
 
 project(Logger)
+enable_testing ()
 
 if (NOT SKIP_GTEST_BUILD)
     # Download and unpack googletest at configure time
