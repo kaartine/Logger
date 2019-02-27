@@ -22,28 +22,18 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "imp_logger.h"
+#include <iostream>
+#include <logger.h>
 
-namespace Logs {
+using Logs::ILogger;
 
-void ImpLogger::getString(std::string &text, const std::string &formatString, va_list vaArgs) {
-    const char * const tmpFormatString = formatString.c_str();
-    va_list vaCopy;
-    va_copy(vaCopy, vaArgs);
-    const int inputLen = vsnprintf(nullptr, 0, tmpFormatString, vaCopy);
-    va_end(vaCopy);
-    std::vector<char> charVector(static_cast<size_t>(inputLen + 1));
-    vsnprintf(charVector.data(), charVector.size(), tmpFormatString, vaArgs);
-    text = std::string(charVector.data(), charVector.size());
-}
+int main(int argc, char **argv) {
 
-void ImpLogger::printToStream(std::ostream &stream, std::string &text, LogVerboseLevel level) {
-    if (level == ERROR)
-        stream << "Error: " << text << std::endl;
-    else if (level == WARNING)
-        stream << "Warning: " << text << std::endl;
-    else
-        stream << "Unknown level: " << text << std::endl;
-}
+    ILogger *log = Logs::LoggerFactory::getLogger(Logs::CONSOLE);
 
+    log->log(Logs::ERROR) << "Hello from test app" << std::endl;
+    log->log("Another way to use logger.", Logs::WARNING);
+    log->log("And some format strings. %s%d%s.", Logs::WARNING, "<", 42, ">");
+
+    return 0;
 }

@@ -88,3 +88,9 @@ add_executable(logger_test ${logger_test_files})
 
 target_link_libraries(logger_test gtest_main gtest logger_lib)
 add_test(NAME logger COMMAND logger_test)
+
+# Test for outputting logs
+add_executable(example_app tests/example_app.cpp)
+target_link_libraries(example_app logger_lib)
+add_test(NAME example_app COMMAND example_app)
+
