@@ -27,7 +27,7 @@ SOFTWARE.
 
 using Logs::ILogger;
 
-int main(int argc, char **argv) {
+int main(int /*argc*/, char ** /*argv*/) {
 
     ILogger *log = Logs::LoggerFactory::getLogger(Logs::CONSOLE);
 
