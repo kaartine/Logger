@@ -26,7 +26,7 @@ SOFTWARE.
 
 namespace Logs {
 
-void ImpLogger::getString(std::string &text, const std::string &formatString, LogVerboseLevel level, va_list vaArgs) {
+void ImpLogger::getString(std::string &text, const std::string &formatString, va_list vaArgs) {
     const char * const tmpFormatString = formatString.c_str();
     va_list vaCopy;
     va_copy(vaCopy, vaArgs);
@@ -42,6 +42,8 @@ void ImpLogger::printToStream(std::ostream &stream, std::string &text, LogVerbos
         stream << "Error: " << text << std::endl;
     else if (level == WARNING)
         stream << "Warning: " << text << std::endl;
+    else
+        stream << "Unknown level:";
 }
 
 }

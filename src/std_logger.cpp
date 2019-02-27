@@ -33,7 +33,7 @@ void ImpStdLogger::log(const std::string &formatString, LogVerboseLevel level, .
     std::string text;
     va_list args;
     va_start(args, level);
-    getString(text, formatString, level, args);
+    getString(text, formatString, args);
     va_end(args);
 
     if (level == ERROR)
@@ -50,6 +50,8 @@ std::ostream &ImpStdLogger::log(LogVerboseLevel level) {
         return std::cerr << "Error: ";
     else if (level == WARNING)
         return std::cout << "Warning: ";
+    else
+        return std::cout << "Unknown level: ";
 }
 
 }

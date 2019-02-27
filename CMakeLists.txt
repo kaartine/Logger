@@ -59,6 +59,12 @@ if (CMAKE_VERSION VERSION_LESS 2.8.11)
     include_directories("${gtest_SOURCE_DIR}/include")
 endif()
 
+if(MSVC)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
+elseif(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
+endif()
+
 set(logger_files
     src/std_logger.cpp
     src/file_logger.cpp
@@ -72,7 +78,7 @@ target_include_directories(logger_lib PRIVATE src)
 # Public API for the Logger
 target_include_directories(logger_lib PUBLIC include)
 
-set(logger_test_files 
+set(logger_test_files
     tests/main.cpp
     tests/tests.cpp
     )

@@ -36,7 +36,7 @@ namespace Logs {
 
 class ImpLogger : public ILogger {
 public:
-    static void getString(std::string &text, const std::string &formatString, LogVerboseLevel level, va_list vaArgs);
+    static void getString(std::string &text, const std::string &formatString, va_list vaArgs);
     void printToStream(std::ostream &stream, std::string &text, LogVerboseLevel level);
 };
 
